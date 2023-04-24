@@ -17,7 +17,7 @@ class _SodukuSolverState extends State<SodukuSolver> {
   @override
   void initState() {
     super.initState();
-    fetchSodukuPuzzle();
+    // fetchSodukuPuzzle();
   }
 
   @override
@@ -28,7 +28,7 @@ class _SodukuSolverState extends State<SodukuSolver> {
       ),
       body: MaterialButton(
         onPressed: () {},
-        color: Colors.red,
+        color: Colors.blue,
       ),
     );
   }
