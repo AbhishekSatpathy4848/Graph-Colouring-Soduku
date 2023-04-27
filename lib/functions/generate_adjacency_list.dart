@@ -11,7 +11,9 @@ Map<SudokuNodeClass, List<SudokuNodeClass>> generateAdjacencyList(List<List<Sudo
             if(k == i && l == j){
               continue;
             }
-            else if (node.boxNumber == sudokuNodesClasses[k][l].boxNumber || node.rowNumber == sudokuNodesClasses[k][l].rowNumber || node.columnNumber == sudokuNodesClasses[k][l].columnNumber){
+            else if (node.boxNumber == sudokuNodesClasses[k][l].boxNumber || 
+            node.rowNumber == sudokuNodesClasses[k][l].rowNumber || 
+            node.columnNumber == sudokuNodesClasses[k][l].columnNumber){
               adjacencyList[node]!.add(sudokuNodesClasses[k][l]);
             }
           }
@@ -21,3 +23,5 @@ Map<SudokuNodeClass, List<SudokuNodeClass>> generateAdjacencyList(List<List<Sudo
     }
     return adjacencyList;
 }
+
+

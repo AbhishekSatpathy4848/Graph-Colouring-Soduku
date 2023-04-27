@@ -1,4 +1,4 @@
-import 'dart:math';
+import 'dart:ui';
 
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
@@ -160,8 +160,13 @@ class _SodukuSolverState extends State<SodukuSolver> {
                                   .toList())
                               .toList();
                           compute(solveSudoku, sudokuNodesClasses)
-                              .then((value) {});
-                          solved.value = true;
+                              .then((value) {
+                            if (value) {
+                              solved.value = true;
+                            } else {
+                              showIncorrectGridDialog(context);
+                            }
+                          });
                         } else {
                           sudokuNodesClasses = sudokuNodesClassesQuestion
                               .map((e) => e
@@ -191,23 +196,32 @@ class _SodukuSolverState extends State<SodukuSolver> {
   }
 }
 
-int getBoxNumber(int i, int j, int sudokuLength) {
-  return (i ~/ sqrt(sudokuLength)) * (sqrt(sudokuLength)).toInt() +
-      (j ~/ sqrt(sudokuLength));
-}
-
-List<List<SudokuNodeClass>> convertColorToSudoku(final sudokuPuzzle) {
-  List<List<SudokuNodeClass>> res = [];
-  for (int i = 0; i < sudokuPuzzle.length; i++) {
-    List<SudokuNodeClass> row = [];
-    for (int j = 0; j < sudokuPuzzle[i].length; j++) {
-      row.add(SudokuNodeClass(
-          color: sudokuPuzzle[i][j],
-          boxNumber: getBoxNumber(i, j, sudokuPuzzle.length),
-          rowNumber: i,
-          columnNumber: j));
-    }
-    res.add(row);
-  }
-  return res;
+void showIncorrectGridDialog(final context) {
+  showDialog(
+      context: context,
+      builder: (context) {
+        return BackdropFilter(
+            filter: ImageFilter.blur(sigmaX: 2, sigmaY: 2),
+            child: Dialog(
+              shape: RoundedRectangleBorder(
+                  borderRadius: BorderRadius.circular(15.0)),
+              backgroundColor: Colors.white,
+              child: Padding(
+                padding: const EdgeInsets.all(40.0),
+                child: Column(
+                  mainAxisSize: MainAxisSize.min,
+                  children: const [
+                    Text(
+                      "Incorrect Grid!!",
+                      style: TextStyle(
+                        fontWeight: FontWeight.w700,
+                        fontSize: 18,
+                      ),
+                      textAlign: TextAlign.center,
+                    ),
+                  ],
+                ),
+              ),
+            ));
+      });
 }

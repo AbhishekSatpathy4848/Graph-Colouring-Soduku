@@ -7,6 +7,8 @@ import 'package:sudoku_graph_colouring/functions/utility_functions.dart';
 
 bool solveSudoku(List<List<SudokuNodeClass>> sudokuNodesClasses) {
   final adjList = generateAdjacencyList(sudokuNodesClasses);
+  final isValid = isValidSudoku(adjList);
+  if (!isValid) return false;
   return colorise(adjList, convertTo1D(sudokuNodesClasses));
 }
 
@@ -34,6 +36,19 @@ bool checkValidColor(final adjacencyList, final node, final color) {
   for (var neighbour in adjacencyList[node]!) {
     if (neighbour.color == color) {
       return false;
+    }
+  }
+  return true;
+}
+
+bool isValidSudoku(Map<SudokuNodeClass, List<SudokuNodeClass>> adjacencyList) {
+  for (final node in adjacencyList.keys) {
+    for (final neighbour in adjacencyList[node]!) {
+      if (node.color != notColoured) {
+        if (neighbour.color == node.color) {
+          return false;
+        }
+      }
     }
   }
   return true;
