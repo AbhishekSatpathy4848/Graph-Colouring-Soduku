@@ -3,6 +3,7 @@ import 'dart:math';
 import 'package:flutter/material.dart';
 import 'package:sudoku_graph_colouring/classes/sudoku_node_class.dart';
 import 'package:sudoku_graph_colouring/constants/number_color_map.dart';
+import 'package:sudoku_graph_colouring/functions/utility_functions.dart';
 
 class SudokuNodeWidget extends StatelessWidget {
   final SudokuNodeClass node;
@@ -29,7 +30,8 @@ class SudokuNodeWidget extends StatelessWidget {
                     child: Text(
                       node.color == notColoured
                           ? ""
-                          : colorToNumberMap[node.color].toString(),
+                          : convertToAlphabetsAndNumbers(
+                              colorToNumberMap[node.color]!),
                       style: TextStyle(
                           color: Colors.black,
                           fontSize: determineFontSize(sudokuSize),
