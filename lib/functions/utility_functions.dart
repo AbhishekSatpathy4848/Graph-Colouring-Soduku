@@ -1,3 +1,5 @@
+import 'dart:math';
+
 import 'package:sudoku_graph_colouring/classes/sudoku_node_class.dart';
 
 List<SudokuNodeClass> convertTo1D(
@@ -29,4 +31,25 @@ String convertToAlphabetsAndNumbers(int n) {
     return String.fromCharCode(n - 10 + 65);
   }
   return n.toString();
+}
+
+int getBoxNumber(int i, int j, int sudokuLength) {
+  return (i ~/ sqrt(sudokuLength)) * (sqrt(sudokuLength)).toInt() +
+      (j ~/ sqrt(sudokuLength));
+}
+
+List<List<SudokuNodeClass>> convertColorToSudoku(final sudokuPuzzle) {
+  List<List<SudokuNodeClass>> res = [];
+  for (int i = 0; i < sudokuPuzzle.length; i++) {
+    List<SudokuNodeClass> row = [];
+    for (int j = 0; j < sudokuPuzzle[i].length; j++) {
+      row.add(SudokuNodeClass(
+          color: sudokuPuzzle[i][j],
+          boxNumber: getBoxNumber(i, j, sudokuPuzzle.length),
+          rowNumber: i,
+          columnNumber: j));
+    }
+    res.add(row);
+  }
+  return res;
 }

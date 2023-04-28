@@ -1,6 +1,5 @@
 import 'dart:ui';
 
-import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:sudoku_graph_colouring/classes/sudoku_node_class.dart';
 import 'package:sudoku_graph_colouring/constants/number_color_map.dart';
@@ -27,22 +26,6 @@ class _SodukuSolverState extends State<SodukuSolver> {
   ValueNotifier<bool> showColor = ValueNotifier(false);
   ValueNotifier<bool> solved = ValueNotifier(false);
   SudokuSizes dropDownValue = SudokuSizes.fourByFour;
-
-  // initSudokuNodeClasses(List<List<Color>> sudokuPuzzle) {
-  //   for (int i = 0; i < sudokuPuzzle.length; i++) {
-  //     List<SudokuNodeClass> row = [];
-  //     for (int j = 0; j < sudokuPuzzle[i].length; j++) {
-  //       row.add(SudokuNodeClass(
-  //           color: sudokuPuzzle[i][j],
-  //           boxNumber: (i ~/ sqrt(sudokuNodesClasses.length)) *
-  //                   (sqrt(sudokuNodesClasses.length)).toInt() +
-  //               (j ~/ sqrt(sudokuNodesClasses.length)),
-  //           columnNumber: j,
-  //           rowNumber: i));
-  //     }
-  //     sudokuNodesClasses.add(row);
-  //   }
-  // }
 
   @override
   void initState() {
@@ -159,12 +142,16 @@ class _SodukuSolverState extends State<SodukuSolver> {
                                       SudokuNodeClass.clone(sudokuNodeClass: e))
                                   .toList())
                               .toList();
-                          compute(solveSudoku, sudokuNodesClasses)
-                              .then((value) {
-                            if (value) {
+                          // final value =
+                          solveSudoku(sudokuNodesClasses).then((value) {
+                            if (value == null) {
+                              showIncorrectGridDialog(context,
+                                  "Sudoku is taking too much time to solve!!");
+                            } else if (value) {
                               solved.value = true;
                             } else {
-                              showIncorrectGridDialog(context);
+                              showIncorrectGridDialog(
+                                  context, "Incorrect Sudoku");
                             }
                           });
                         } else {
@@ -194,34 +181,46 @@ class _SodukuSolverState extends State<SodukuSolver> {
           ),
         ));
   }
-}
 
-void showIncorrectGridDialog(final context) {
-  showDialog(
-      context: context,
-      builder: (context) {
-        return BackdropFilter(
-            filter: ImageFilter.blur(sigmaX: 2, sigmaY: 2),
-            child: Dialog(
-              shape: RoundedRectangleBorder(
-                  borderRadius: BorderRadius.circular(15.0)),
-              backgroundColor: Colors.white,
-              child: Padding(
-                padding: const EdgeInsets.all(40.0),
-                child: Column(
-                  mainAxisSize: MainAxisSize.min,
-                  children: const [
-                    Text(
-                      "Incorrect Grid!!",
-                      style: TextStyle(
-                        fontWeight: FontWeight.w700,
-                        fontSize: 18,
+  void showIncorrectGridDialog(final context, String text) {
+    showDialog(
+        context: context,
+        builder: (context) {
+          return BackdropFilter(
+              filter: ImageFilter.blur(sigmaX: 2, sigmaY: 2),
+              child: Dialog(
+                shape: RoundedRectangleBorder(
+                    borderRadius: BorderRadius.circular(15.0)),
+                backgroundColor: Colors.white,
+                child: Padding(
+                  padding: const EdgeInsets.all(40.0),
+                  child: Column(
+                    mainAxisSize: MainAxisSize.min,
+                    children: [
+                      Text(
+                        text,
+                        style: const TextStyle(
+                          fontWeight: FontWeight.w700,
+                          fontSize: 18,
+                        ),
+                        textAlign: TextAlign.center,
                       ),
-                      textAlign: TextAlign.center,
-                    ),
-                  ],
+                      const SizedBox(
+                        height: 20,
+                      ),
+                      TextButton(
+                          onPressed: () {
+                            Navigator.of(context).pop();
+                            setState(() {
+                              sudokuNodesClasses =
+                                  fetchSudokuPuzzle(dropDownValue);
+                            });
+                          },
+                          child: const Text("Generate Another Sudoku")),
+                    ],
+                  ),
                 ),
-              ),
-            ));
-      });
+              ));
+        });
+  }
 }
